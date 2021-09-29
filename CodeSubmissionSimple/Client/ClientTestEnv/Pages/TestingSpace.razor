@@ -1,0 +1,96 @@
+@page "/testenv"
+
+<style>
+
+@@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+*{
+    font-family: 'Montserrat', sans-serif;
+}
+
+</style>
+
+<div class="wrapper">
+
+    
+    <div class="nav-container">
+
+         <div class="icon">
+             
+             <img src="images/launch.png" alt="astro"> &nbsp;
+             <span>Xebec Test Environment</span>
+             
+         </div>
+
+        <div class="btn-container">
+
+            <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
+            <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="center-container">
+
+        @if(Counter == 1)
+        {
+            <QuestionOneComponent/>       
+        }
+        else if(Counter == 2)
+        {
+            <QuestionTwoComponent/>
+        }
+        else if(Counter == 3)
+        {
+            <QuestionThreeComponent/>
+        }
+        else if(Counter == 4)
+        {
+            <QuestionFourComponent/>
+        }
+        else if(Counter == 5)
+        {
+            <QuestionFiveComponent/>
+        }
+        else if(Counter == 6)
+        {
+            <QuestionSixComponent/>
+        }
+
+    </div>
+
+
+
+
+    <div class="footer-container">
+
+        <span>Nebula 2021 &reg;</span>
+
+    </div>
+
+</div>
+
+@code
+{
+    private int Counter = 1;
+    
+    
+    private void PageUp()
+    {
+        Counter++;
+        if(Counter > 6)
+            Counter = 6;
+    }
+
+    private void PageDown()
+    {
+        Counter--;
+        if(Counter < 1)
+            Counter = 1;
+    }
+
+
+}

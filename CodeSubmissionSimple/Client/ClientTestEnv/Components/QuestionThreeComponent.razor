@@ -1,0 +1,174 @@
+@inject IJSRuntime jsr
+
+
+<style>
+  .center-inner {
+    width: 80%;
+    height: 80%;
+    margin: auto;
+    max-width: 1000px;
+    max-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  .question-container {
+    width: 40%;
+    height: 90%;
+    margin: auto;
+    padding: 20px;
+    overflow: scroll;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+
+  .question-container::-webkit-scrollbar
+  {
+      width: 10px;
+      height: 10px;
+  }
+
+  .question-container::-webkit-scrollbar-track {
+        background-color: #fff;
+        border-radius: 5px;
+    }
+
+  .question-container::-webkit-scrollbar-thumb {
+        background-color: #95A5A6;
+        border-radius: 20px;
+        border: 3px solid #fff;
+  }
+
+  .ide-container textarea::-webkit-scrollbar
+  {
+      width: 10px;
+      height: 10px;
+  }
+
+  .ide-container textarea::-webkit-scrollbar-track {
+        background-color: #fff;
+        border-radius: 5px;
+    }
+
+  .ide-container textarea::-webkit-scrollbar-thumb {
+        background-color: #95A5A6;
+        border-radius: 20px;
+        border: 3px solid #fff;
+  }
+
+  .ide-container {
+    width: 55%;
+    height: 90%;
+    margin: auto;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    border-radius: 5px;
+  }
+
+  .ide-container textarea
+  {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: none;
+    outline: none;
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  /*IMAGE MODAL*/
+  .db-image-container
+  {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.9);
+  }
+
+  .db-image-container img
+  {
+    position: absolute;
+    width: 95%;
+    max-width: 600px;
+    height: 95%;
+    max-height: 500px;
+    left:50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .db-image-container button
+  {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      margin: 15px;
+  }
+
+
+/*MEDIA QUERIES*/
+@@media screen and (max-width: 780px)
+{
+    .center-inner
+    {
+        flex-direction: column;
+    }
+
+   .question-container {
+    width: 90%;
+    height: 40%;
+  }
+
+  .ide-container {
+    width: 90%;
+    height: 55%;
+  }
+
+}
+
+
+
+</style> 
+
+<div class="center-inner">
+
+  <div class="question-container">
+    
+    <h3>Back-end Challenge - 1</h3>
+
+    <p>
+
+      Write a C# method that will take, as input, a string and dependent on the string length prints out the following: <br>
+
+      <ol style="margin-left: 10px;">
+        <li>If the length is a multiple of 2 your method must print out "Stack"</li><br>
+        <li>If the length is a multiple of 4 your method must print out "Overflow"</li><br>
+        <li>If the length is a multiple of 2 and 4 your method must print out "Stack Overflow!"</li>
+      </ol>
+
+    </p>
+
+   
+  </div>
+
+  <div class="ide-container">
+
+    <textarea placeholder="What's your response?"></textarea>
+
+  </div>
+
+</div>
+
+
+@code
+{
+ 
+
+}
