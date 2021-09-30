@@ -1,96 +1,135 @@
 @page "/testenv"
+@inject IJSRuntime jsr
+@inject NavigationManager NavigationManager
 
 <style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-@@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
-*{
-    font-family: 'Montserrat', sans-serif;
-}
-
+    * {
+        font-family: 'Montserrat', sans-serif;
+        line-height: 22px;
+    }
 </style>
 
-<div class="wrapper">
+@if (string.IsNullOrEmpty(username))
+{
+    <RegLogComponent />
+}
+else
+{
 
-    
-    <div class="nav-container">
+    <div class="wrapper">
 
-         <div class="icon">
-             
-             <img src="images/launch.png" alt="astro"> &nbsp;
-             <span>Xebec Test Environment</span>
-             
-         </div>
 
-        <div class="btn-container">
+        <div class="nav-container">
 
-            <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
-            <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
+            <div class="icon">
+
+                <img src="images/launch.png" alt="astro"> &nbsp;
+                <span>Xebec Test Environment</span>
+
+            </div>
+
+            <div class="btn-container">
+
+                @if (Counter > 1 && Counter < 6)
+                {
+                    <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
+                    <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
+                }                
+                else if(Counter == 6)
+                {
+                    <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
+                    <button class="btn btn-outline-info btn-sm">Submit</button>
+                }
+                else
+                {
+                    <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
+                }
+
+            </div>
+
+        </div>
+
+        <UserAuthActionComponent />
+
+        <div class="center-container">
+
+
+            @if (Counter == 1)
+            {
+                <QuestionOneComponent />
+            }
+            else if (Counter == 2)
+            {
+                <QuestionTwoComponent />
+            }
+            else if (Counter == 3)
+            {
+                <QuestionThreeComponent />
+            }
+            else if (Counter == 4)
+            {
+                <QuestionFourComponent />
+            }
+            else if (Counter == 5)
+            {
+                <QuestionFiveComponent />
+            }
+            else if (Counter == 6)
+            {
+                <QuestionSixComponent />
+            }
+
+        </div>
+
+
+
+
+        <div class="footer-container">
+
+            <span>Nebula 2021 &reg;</span>
 
         </div>
 
     </div>
-
-
-
-    <div class="center-container">
-
-        @if(Counter == 1)
-        {
-            <QuestionOneComponent/>       
-        }
-        else if(Counter == 2)
-        {
-            <QuestionTwoComponent/>
-        }
-        else if(Counter == 3)
-        {
-            <QuestionThreeComponent/>
-        }
-        else if(Counter == 4)
-        {
-            <QuestionFourComponent/>
-        }
-        else if(Counter == 5)
-        {
-            <QuestionFiveComponent/>
-        }
-        else if(Counter == 6)
-        {
-            <QuestionSixComponent/>
-        }
-
-    </div>
-
-
-
-
-    <div class="footer-container">
-
-        <span>Nebula 2021 &reg;</span>
-
-    </div>
-
-</div>
+}
 
 @code
 {
     private int Counter = 1;
-    
-    
+
+
     private void PageUp()
     {
         Counter++;
-        if(Counter > 6)
+        if (Counter > 6)
             Counter = 6;
     }
 
     private void PageDown()
     {
         Counter--;
-        if(Counter < 1)
+        if (Counter < 1)
             Counter = 1;
     }
+
+    /*AUTHORIZING USER*/
+    string username = string.Empty;
+    string role = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var userdata = await jsr.InvokeAsync<string>("localStorage.getItem", "user").ConfigureAwait(false);
+        if (!string.IsNullOrWhiteSpace(userdata))
+        {
+            string[] userdetails = userdata.Split(';', 3);
+            username = userdetails[0];
+            role = userdetails[1].ToLower();
+        }
+    }
+
 
 
 }

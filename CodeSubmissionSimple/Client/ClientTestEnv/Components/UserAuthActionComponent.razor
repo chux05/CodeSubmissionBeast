@@ -1,15 +1,40 @@
 ﻿@inject IJSRuntime jsr
 
-<p>
+<style>
+
+.userauth-container
+{
+    position: absolute;
+    right: 0;
+    padding: 1.5rem;
+    font-size: 14px;
+}
+
+@@media screen and (max-width: 450px)
+{
+    .userauth-container
+    {
+        font-size: 12px;
+    }
+}
+
+</style>
+
+<div class="userauth-container">
+
+
+    <p>
     @if (string.IsNullOrEmpty(username))
     {
-        <span><a href="/">Register</a> <a href="/testlogin">Login</a></span>
+        <span><a href="/">Register</a> <a href="/login_">Login</a></span>
     }
     else
     {
-        <span>Hello, @username <a href="/testlogout">(Logout)</a></span>
+        <span>Hello, @username <a href="/newtestlogout">(Logout)</a></span>
     }
 </p>
+
+</div>
 
 @code {
 

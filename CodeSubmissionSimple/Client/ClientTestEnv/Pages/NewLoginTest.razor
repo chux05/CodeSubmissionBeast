@@ -1,0 +1,141 @@
+﻿@page "/login_"
+@inject HttpClient Http
+@inject IJSRuntime jsr
+@inject NavigationManager NavigationManager
+
+<style>
+    * {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .wrapper-log {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+     .wrapper-log h3
+    {
+        font-size: 3rem;
+    }
+
+    .reg-container {
+        width: 90%;
+        max-width: 450px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        padding: 25px;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        border-radius: 5px;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .btn-container a {
+        font-size: 14px;
+        margin-right: 5px;
+    }
+
+        /*MEDIA QUERIES*/
+  @@media screen and (max-width: 400px)
+  {
+      .btn-container
+      {
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: space-evenly;
+      }
+  }
+
+  @@media screen and (max-width: 215px)
+  {
+      .wrapper-log 
+      {
+          display: none;
+      }
+  }
+
+</style>
+
+<div class="wrapper-log">
+
+    <h3>Login</h3>
+
+    @if (IsSuccessful)
+    {
+        <p><i>@message Initializing...</i></p>
+    }
+    else
+    {
+        <p><i>@message</i></p>
+    }
+
+    <EditForm Model="user" OnValidSubmit="OnValid" class="reg-container mt-2">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="mb-2">
+            <InputText class="form-control" @bind-Value="user.Email" placeholder="Enter Email"></InputText>
+        </div>
+        <div class="mb-2">
+            <InputText type="password" class="form-control" @bind-Value="user.Password" placeholder="Enter Password">
+            </InputText>
+        </div>
+        <div class="mb-2 mt-2 text-left btn-container">
+            <button class="btn btn-success btn-sm" disabled="@isDisabled">Login</button>
+            &nbsp; &nbsp; <a href="/">New to the platform? Register</a>
+        </div>
+
+    </EditForm>
+
+
+</div>
+
+@code {
+
+    LoginModel user = new LoginModel();
+    string message = string.Empty;
+    bool isDisabled = false;
+    bool IsSuccessful = false;
+    string test = string.Empty;
+    private async Task OnValid()
+    {
+        isDisabled = true;
+        using (var msg = await Http.PostAsJsonAsync<LoginModel>("/api/auth/login", user,
+        System.Threading.CancellationToken.None))
+        {
+            if (msg.IsSuccessStatusCode)
+            {
+                LoginResult result = await msg.Content.ReadFromJsonAsync<LoginResult>();
+                message = result.Message;
+                isDisabled = false;
+                test = result.Role;
+                if (result.Success)
+                {
+                    await jsr.InvokeVoidAsync("localStorage.setItem", "user",
+                    $"{result.Email};{result.Role};{result.JwtBearer}").ConfigureAwait(false);
+                    
+                     if (result.Role.ToLower().Equals("candidate"))
+                    {
+                        IsSuccessful = true;
+                        NavigationManager.NavigateTo("/testenv");
+                    }
+                    else
+                    {
+                        IsSuccessful = true;
+                        NavigationManager.NavigateTo("/admin_");
+                    }
+                    
+                }
+            }
+        }
+    }
+
+
+}

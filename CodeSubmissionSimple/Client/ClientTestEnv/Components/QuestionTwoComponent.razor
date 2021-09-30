@@ -61,8 +61,7 @@
   .ide-container {
     width: 55%;
     height: 90%;
-    margin: auto;
-    background-color: #fff;
+    margin: auto;    
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
     border-radius: 5px;
   }
@@ -75,6 +74,10 @@
     outline: none;
     padding: 15px;
     font-size: 14px;
+    background-color: #000;
+    color: #84f998;
+    font-family: monospace;
+    border-radius: 5px;
   }
 
   /*IMAGE MODAL*/
@@ -112,14 +115,14 @@
       flex-direction: column;
     }
 
-    .question-container {
+  .question-container {
       width: 90%;
-      height: 40%;
+      height: 55%;
     }
 
     .ide-container {
       width: 90%;
-      height: 55%;
+      height: 40%;
     }
 
   }
@@ -128,7 +131,7 @@
 <div class="center-inner">
 
   <div class="question-container">
-    <h3>Database Challenge - 2</h3>
+    <h3 class="mb-3">Database Challenge - 2</h3>
 
     <p>
 
@@ -141,7 +144,9 @@
     <button @onclick="ShowModal" class="btn btn-outline-primary btn-sm">Click here to view tables</button>
   </div>
 
-  <div class="ide-container"></div>
+  <div class="ide-container">
+    <textarea placeholder="What's your response?" spellcheck="false"></textarea>
+  </div>
 
 </div>
 
