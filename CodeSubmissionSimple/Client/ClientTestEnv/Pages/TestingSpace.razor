@@ -1,6 +1,7 @@
 @page "/testenv"
 @inject IJSRuntime jsr
 @inject NavigationManager NavigationManager
+@inject State State
 
 <style>
     @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -36,17 +37,18 @@ else
                 {
                     <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
                     <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
-                }                
-                else if(Counter == 6)
+                }
+                else if (Counter == 6)
                 {
                     <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
-                    <button class="btn btn-outline-info btn-sm">Submit</button>
+                    <button class="btn btn-outline-danger btn-sm">Submit</button>
                 }
                 else
                 {
                     <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
                 }
 
+             
             </div>
 
         </div>
@@ -83,9 +85,6 @@ else
 
         </div>
 
-
-
-
         <div class="footer-container">
 
             <span>Nebula 2021 &reg;</span>
@@ -95,23 +94,26 @@ else
     </div>
 }
 
+
 @code
 {
+
+    public SubmissionSample Submission { get; set; }  
     private int Counter = 1;
-
-
     private void PageUp()
     {
         Counter++;
         if (Counter > 6)
             Counter = 6;
+     
     }
 
     private void PageDown()
     {
         Counter--;
         if (Counter < 1)
-            Counter = 1;
+            Counter = 1; 
+
     }
 
     /*AUTHORIZING USER*/
@@ -128,8 +130,6 @@ else
             username = userdetails[0];
             role = userdetails[1].ToLower();
         }
-    }
-
-
+    }   
 
 }

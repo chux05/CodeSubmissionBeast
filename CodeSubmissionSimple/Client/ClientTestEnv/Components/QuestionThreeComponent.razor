@@ -82,6 +82,14 @@
     border-radius: 5px;
   }
 
+ .save-btn-container
+  {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 
 /*MEDIA QUERIES*/
 @@media screen and (max-width: 780px)
@@ -131,6 +139,10 @@
   <div class="ide-container">
 
     <textarea placeholder="What's your response?" spellcheck="false"></textarea>
+
+    <div class="save-btn-container">
+      <button class="btn btn-primary btn-sm">Save</button>
+    </div>
 
   </div>
 

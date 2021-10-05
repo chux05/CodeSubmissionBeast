@@ -1,5 +1,5 @@
 @inject IJSRuntime jsr
-
+@inject State State
 
 <style>
   .center-inner {
@@ -41,17 +41,17 @@
     border: 3px solid #fff;
   }
 
-  .ide-container textarea::-webkit-scrollbar {
+  .ide-container .textarea::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
 
-  .ide-container textarea::-webkit-scrollbar-track {
+  .ide-container .textarea::-webkit-scrollbar-track {
     background-color: #fff;
     border-radius: 5px;
   }
 
-  .ide-container textarea::-webkit-scrollbar-thumb {
+  .ide-container .textarea::-webkit-scrollbar-thumb {
     background-color: #95A5A6;
     border-radius: 20px;
     border: 3px solid #fff;
@@ -67,7 +67,7 @@
     border-radius: 5px;
   }
 
-  .ide-container textarea {
+  .ide-container .textarea {
     width: 100%;
     height: 100%;
     resize: none;
@@ -107,6 +107,15 @@
     margin: 15px;
   }
 
+  .save-btn-container
+  {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
   /*MEDIA QUERIES*/
   @@media screen and (max-width: 780px) {
     .center-inner {
@@ -124,15 +133,19 @@
     }
 
   }
+ 
+
 </style>
 
-<div class="center-inner">
+<EditForm Model="Submission" class="center-inner">
+
+  <h3 style="color: blue;">@State.Submissions.Count</h3>
 
   <div class="question-container">
 
-    <h3 class="mb-3">Database Challenge - 1</h3>
+    <h3 id="question-title" class="mb-3">Database Challenge - 1</h3>
 
-    <p>
+    <p id="question-description">
 
       Please see the attached ERD diagram image. The diagram was submitted as a solution to storing employee Cellphone
       data, voice and sms usage. Discuss at least one improvement that can be done to the ERD.
@@ -145,11 +158,15 @@
 
   <div class="ide-container">
 
-    <textarea placeholder="What's your response?"></textarea>
+    <InputTextArea class="textarea" placeholder="What's your response?" @bind-Value="@Submission.Answer"/>
+
+    <div class="save-btn-container">
+      <button class="btn btn-primary btn-sm" @onclick="Save">Save</button>
+    </div>
 
   </div>
 
-</div>
+</EditForm>
 
 <div class="db-image-container" id="image-modal">
 
@@ -158,20 +175,41 @@
 
 </div>
 
+
+
 @code
 {
+  
+  public SubmissionSample Submission { get; set; } = new SubmissionSample();
+
+
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
     if (firstRender)
     {
-      await jsr.InvokeVoidAsync("initialize");
+      await jsr.InvokeVoidAsync("initialize");    
+      await jsr.InvokeVoidAsync("getIds");
     }
+      string[] elementInfo = await jsr.InvokeAsync<string[]>("getValues");
+      Submission.QuestionNumber = State.Count;
+      Submission.QuestionTitle = elementInfo[0];
+      Submission.QuestionDescription = elementInfo[1];
 
   }
-
   private async Task ShowModal()
   {
     await jsr.InvokeVoidAsync("showModal");
+  }
+
+  private void Save()
+  {
+    //TODO: Check state of Submission
+    //check if response box is filled
+    //add prompt for next button - create own drop down confirm box
+    //keep state once page is refreshed - look into localstorage - cache
+
+    State.Count++;
+    State.Submissions.Add(Submission);
   }
 
 }

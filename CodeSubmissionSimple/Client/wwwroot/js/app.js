@@ -19,3 +19,4 @@ function showModal()
         imageModalId.style.display = 'block';
     }
 }
+
