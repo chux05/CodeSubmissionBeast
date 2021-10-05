@@ -41,7 +41,7 @@ else
                 else if (Counter == 6)
                 {
                     <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
-                    <button class="btn btn-outline-danger btn-sm">Submit</button>
+                    <button class="btn btn-outline-danger btn-sm" @onclick="SubmitResponse">Submit</button>
                 }
                 else
                 {
@@ -131,5 +131,10 @@ else
             role = userdetails[1].ToLower();
         }
     }   
+
+    private void SubmitResponse()
+    {
+       NavigationManager.NavigateTo("/submissionspace");
+    }
 
 }

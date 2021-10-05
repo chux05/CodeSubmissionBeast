@@ -1,0 +1,50 @@
+<style>
+
+.center-inner {
+    width: 80%;
+    height: 80%;
+    margin: auto;
+    max-width: 380px;
+    max-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: #edf2fb;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;   
+    padding: 20px;; 
+  }
+
+  .input-container
+  {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      width: 90%;
+      max-width: 330px;
+      height: 90%;
+      max-height: 200px;     
+
+  }
+
+ 
+</style>
+
+<EditForm Model="Submission" class="center-inner">
+
+  
+  <div class="input-container">
+
+      <InputText @bind-Value="Submission.Answer" type="text" class="form-control input-sm" placeholder="Enter Email"/>
+
+      <button class="btn btn-outline-info btn-sm mt-3">Send Invite</button>
+
+  </div>
+
+</EditForm>
+
+@code
+{
+    public SubmissionSample Submission { get; set; } = new SubmissionSample();
+}

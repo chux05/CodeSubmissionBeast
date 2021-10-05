@@ -55,7 +55,7 @@
         margin-right: 2rem;
     }
 
-    @@media screen and (max-width: 450px) {
+    @@media screen and (max-width: 580px) {
         .icon span {
             display: none;
         }
@@ -105,8 +105,23 @@ else
 
             <div class="btn-container">
 
-                <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
-                <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
+
+                @if(Counter == 1)
+                {
+                    <button class="btn btn-outline-success btn-sm mr-2" @onclick="ViewSubmission">View Submissions</button>
+                    <button class="btn btn-outline-primary btn-sm" @onclick="InviteCandiadte">Invite Candidate</button>       
+                }
+                else if(Counter == 2)
+                {
+                    <button class="btn btn-outline-success btn-sm" @onclick="Home">Home</button>
+                    <button class="btn btn-outline-primary btn-sm mr-2" @onclick="ViewSubmission">View Submissions</button>
+                     
+                }
+                else if(Counter == 3)
+                {
+                    <button class="btn btn-outline-success btn-sm" @onclick="Home">Home</button>                    
+                    <button class="btn btn-outline-primary btn-sm" @onclick="InviteCandiadte">Invite Candidate</button>                    
+                }                
 
             </div>
 
@@ -116,8 +131,16 @@ else
 
         <div class="center-container">
 
-
             <!--ADMIN STUFF-->
+            @if(Counter == 2)
+            {
+                <InviteCandidateComponent/>
+            }        
+            else if(Counter == 3)
+            {
+                <ViewSubmissionsComponent/>
+            }    
+
 
         </div>
 
@@ -138,18 +161,19 @@ else
 {
     private int Counter = 1;
 
-    private void PageUp()
+    private void InviteCandiadte()
     {
-        Counter++;
-        if (Counter > 6)
-            Counter = 6;
+        Counter = 2;
     }
 
-    private void PageDown()
+    private void ViewSubmission()
     {
-        Counter--;
-        if (Counter < 1)
-            Counter = 1;
+        Counter = 3;
+    }
+
+    private void Home()
+    {
+        Counter = 1;
     }
 
     /*AUTHORIZING USER*/
