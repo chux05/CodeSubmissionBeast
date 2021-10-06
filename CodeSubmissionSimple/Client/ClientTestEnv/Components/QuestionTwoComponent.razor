@@ -137,7 +137,7 @@
   }
 </style>
 
-<EditForm Model="Submission" class="center-inner">
+<EditForm OnValidSubmit="Save" Model="Submission" class="center-inner">
 
   <h3 style="color: blue;">@State.Submissions.Count</h3>
 
@@ -159,8 +159,12 @@
     
      <InputTextArea class="textarea" placeholder="What's your response?" @bind-Value="@Submission.Answer" spellcheck="false"/>
 
-    <div class="save-btn-container">
-      <button class="btn btn-primary btn-sm" @onclick="Save">Save</button>
+   <div class="save-btn-container">
+          <div class="mr-3">
+            <DataAnnotationsValidator />
+          <ValidationSummary />
+          </div>
+      <button class="btn btn-primary btn-sm">Save</button>
     </div>
 
   </div>

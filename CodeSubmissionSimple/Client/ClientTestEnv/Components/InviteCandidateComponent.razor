@@ -1,18 +1,23 @@
+@inject HttpClient Http
+
 <style>
 
 .center-inner {
+
     width: 80%;
     height: 80%;
     margin: auto;
-    max-width: 380px;
-    max-height: 200px;
+    max-width: 600px;
+    max-height: 400px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
     background-color: #edf2fb;
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;   
-    padding: 20px;; 
+    
+
   }
 
   .input-container
@@ -24,27 +29,88 @@
       width: 90%;
       max-width: 330px;
       height: 90%;
-      max-height: 200px;     
+      max-height: 210px;
+      padding: 20px 25px; 
+      background-color: #fff;
+      border-radius: 5px;
+      border: 1px solid #a8dadc;   
 
   }
 
  
-</style>
+</style>  
 
-<EditForm Model="Submission" class="center-inner">
+<EditForm OnValidSubmit="OnValid" Model="reg" class="center-inner">
 
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+         <h3>Invite Candidate</h3>
+
+         <p>@message</p>
   
   <div class="input-container">
 
-      <InputText @bind-Value="Submission.Answer" type="text" class="form-control input-sm" placeholder="Enter Email"/>
+      <InputText @bind-Value="reg.FullName" type="text" class="form-control input-sm" placeholder="Enter Full Name"/>
 
-      <button class="btn btn-outline-info btn-sm mt-3">Send Invite</button>
+      <InputText @bind-Value="reg.Email" type="text" class="form-control input-sm mt-3" placeholder="Enter Email"/>
+
+      <button class="btn btn-outline-info btn-sm mt-3" disabled="@isDisabled">Send Invite</button>
 
   </div>
 
-</EditForm>
+</EditForm>   
 
 @code
 {
-    public SubmissionSample Submission { get; set; } = new SubmissionSample();
+    InviteRegisterTest reg = new InviteRegisterTest();
+    
+    string message = string.Empty;
+
+    bool isDisabled = false;
+    private async Task OnValid()
+    {
+            //TODO: Create DTO for mapping
+            RegisterModel tempModel = new RegisterModel();
+            tempModel.Email = reg.Email;
+            tempModel.Password = reg.Password;
+            tempModel.ConfirmPassword = reg.Password;
+            tempModel.Role = reg.Role;
+
+            isDisabled = true;
+            using (var msg = await Http.PostAsJsonAsync<RegisterModel>("/api/auth/register", tempModel, System.Threading.CancellationToken.None))
+            {
+                if (msg.IsSuccessStatusCode)
+                {
+                    LoginResult result = await msg.Content.ReadFromJsonAsync<LoginResult>();
+                    message = result.Message;
+                    if (result.Success)
+                    {
+
+                        message += " Candidate has been registered for the test and an email has been sent";
+
+                         //TODO: Create DTO for mapping
+                        InviteRegisterTest regSample = new InviteRegisterTest();
+
+                        regSample.FullName = reg.Password;
+                        regSample.Email = reg.Email;
+                        regSample.Password = reg.Password;                        
+                        regSample.Role = reg.Role;
+
+                        reg.Email = "";
+                        reg.FullName = "";
+                        isDisabled = false;
+
+                        await Http.PostAsJsonAsync("https://prod-254.westeurope.logic.azure.com:443/workflows/0ae8c323d191419f84807d453ff75f6f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qj0xP2xk-z3pM1g4t23KOYy0UkG85aG-EojEXo1hemk", regSample);
+
+                        
+                    }
+                    else
+                        isDisabled = false;
+                }
+
+            }        
+
+    }
+
 }
