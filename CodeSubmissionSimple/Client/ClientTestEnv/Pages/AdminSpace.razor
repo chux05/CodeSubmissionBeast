@@ -1,0 +1,196 @@
+@page "/admin_"
+@inject IJSRuntime jsr
+@inject NavigationManager NavigationManager
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+    * {
+        font-family: 'Montserrat', sans-serif;
+        line-height: 22px;
+    }
+
+    .wrapper {
+        width: 100%;
+        height: 100vh;
+    }
+
+    /*NAV*/
+    .nav-container {
+        width: 100%;
+        height: 8vh;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0px 2rem;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+    }
+
+    .icon span {
+        font-weight: bold;
+    }
+
+
+    /*MAIN SECTION*/
+    .center-container {
+        width: 100%;
+        height: 86vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /*FOOTER*/
+    .footer-container {
+        width: 100%;
+        height: 6vh;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .footer-container span {
+        font-size: 13px;
+        font-weight: bold;
+        margin-right: 2rem;
+    }
+
+    @@media screen and (max-width: 580px) {
+        .icon span {
+            display: none;
+        }
+    }
+
+    @@media screen and (max-width: 240px) {
+        .wrapper {
+            display: none;
+        }
+    }
+
+    @@media screen and (max-height: 300px) {
+        .wrapper {
+            display: none;
+        }
+    }
+
+    
+</style>
+
+
+@if (string.IsNullOrEmpty(username))
+{
+    <RegLogComponent/>
+}
+
+else if (string.IsNullOrEmpty(role) || !role.ToLower().Equals("admin"))
+{
+
+    <RegLogComponent />
+}
+else
+{
+
+
+    <div class="wrapper">
+
+
+        <div class="nav-container">
+
+            <div class="icon">
+
+                <img src="images/launch.png" alt="astro"> &nbsp;
+                <span>The Administrator Space</span>
+
+            </div>
+
+            <div class="btn-container">
+
+
+                @if(Counter == 1)
+                {
+                    <button class="btn btn-outline-success btn-sm mr-2" @onclick="ViewSubmission">View Submissions</button>
+                    <button class="btn btn-outline-primary btn-sm" @onclick="InviteCandiadte">Invite Candidate</button>       
+                }
+                else if(Counter == 2)
+                {
+                    <button class="btn btn-outline-success btn-sm" @onclick="Home">Home</button>
+                    <button class="btn btn-outline-primary btn-sm mr-2" @onclick="ViewSubmission">View Submissions</button>
+                     
+                }
+                else if(Counter == 3)
+                {
+                    <button class="btn btn-outline-success btn-sm" @onclick="Home">Home</button>                    
+                    <button class="btn btn-outline-primary btn-sm" @onclick="InviteCandiadte">Invite Candidate</button>                    
+                }                
+
+            </div>
+
+        </div>
+
+        <UserAuthActionComponent />
+
+        <div class="center-container">
+
+            <!--ADMIN STUFF-->
+            @if(Counter == 2)
+            {
+                <InviteCandidateComponent/>
+            }        
+            else if(Counter == 3)
+            {
+                <ViewSubmissionsComponent/>
+            }    
+
+
+        </div>
+
+
+
+        <div class="footer-container">
+
+            <span>Nebula 2021 &reg;</span>
+
+        </div>
+
+    </div>
+
+}
+
+
+@code
+{
+    private int Counter = 1;
+
+    private void InviteCandiadte()
+    {
+        Counter = 2;
+    }
+
+    private void ViewSubmission()
+    {
+        Counter = 3;
+    }
+
+    private void Home()
+    {
+        Counter = 1;
+    }
+
+    /*AUTHORIZING USER*/
+    string username = string.Empty;
+    string role = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var userdata = await jsr.InvokeAsync<string>("localStorage.getItem", "user").ConfigureAwait(false);
+        if (!string.IsNullOrWhiteSpace(userdata))
+        {
+            string[] userdetails = userdata.Split(';', 3);
+            username = userdetails[0];
+            role = userdetails[1].ToLower();
+        }
+    }
+
+
+}

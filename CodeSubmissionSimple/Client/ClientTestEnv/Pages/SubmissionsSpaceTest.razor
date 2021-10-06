@@ -1,0 +1,29 @@
+@page "/submissionspace"
+@inject State State
+
+<table class="table table-dark mt-5">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Answer</th>
+    </tr>
+  </thead>
+  <tbody>
+   
+    @if(State.Submissions != null)
+    {
+      @foreach (var submission in State.Submissions)
+      {
+        <tr>
+            <th scope="row">@submission.QuestionNumber</th>
+            <td>@submission.QuestionTitle</td>
+            <td>@submission.QuestionDescription</td>
+            <td>@submission.Answer</td>
+        </tr>   
+      }
+    }
+
+  </tbody>
+</table>
