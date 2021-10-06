@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using CodeSubmissionSimple.Server.IRepositories;
 using CodeSubmissionSimple.Server.Models;
+using CodeSubmissionSimple.Server.TestEnvironment;
 using CodeSubmissionSimple.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +25,7 @@ namespace CodeSubmissionSimple.Server.Controllers
 		{
 			this.userDb = userDb;
 		}
-
+		 
 		private string CreateJWT(AppUser user)
 		{
 			var secretkey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("THIS IS THE SECRET KEY"));

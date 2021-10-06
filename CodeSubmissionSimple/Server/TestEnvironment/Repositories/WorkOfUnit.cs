@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CodeSubmissionSimple.Server.Data;
-using CodeSubmissionSimple.Server.IRepositories;
 using CodeSubmissionSimple.Shared;
 
 namespace CodeSubmissionSimple.Server.TestEnvironment
@@ -15,6 +13,7 @@ namespace CodeSubmissionSimple.Server.TestEnvironment
         private IEncompassingRepository<AppUser> _appusers;
         private IEncompassingRepository<Submission> _submissions;
         private IEncompassingRepository<Answer> _answers;
+        private IEncompassingRepository<SubmissionSample> _submissionSamples;
         public WorkOfUnit(AppDbContext context)
         {
             _context = context;
@@ -27,6 +26,8 @@ namespace CodeSubmissionSimple.Server.TestEnvironment
         public IEncompassingRepository<Answer> Answers => _answers ??= new EncompassingRepository<Answer>(_context);
 
         public IEncompassingRepository<Submission> Submissions => _submissions ??= new EncompassingRepository<Submission>(_context);
+
+        public IEncompassingRepository<SubmissionSample> SubmissionSamples => _submissionSamples ??= new EncompassingRepository<SubmissionSample>(_context);
 
         public void Dispose()
         {

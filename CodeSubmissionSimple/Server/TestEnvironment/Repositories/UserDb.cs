@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CodeSubmissionSimple.Server.IRepositories;
+using CodeSubmissionSimple.Server.TestEnvironment;
 using CodeSubmissionSimple.Server.Models;
 using CodeSubmissionSimple.Shared;
 using System;
@@ -9,14 +9,14 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSubmissionSimple.Server.Repositories
+namespace CodeSubmissionSimple.Server.TestEnvironment
 {
     public class UserDb : IUserDb
     {
-        private readonly IUnitOfWork unitOfWork;
+        private readonly IWorkOfUnit unitOfWork;
         private readonly IMapper mapper;
 
-        public UserDb(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserDb(IWorkOfUnit unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;

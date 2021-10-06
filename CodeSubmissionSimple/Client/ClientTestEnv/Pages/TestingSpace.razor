@@ -1,7 +1,14 @@
 @page "/testenv"
 @inject IJSRuntime jsr
 @inject NavigationManager NavigationManager
+@inject HttpClient client
 @inject State State
+
+
+@using System.Net.Http;
+@using Newtonsoft.Json;
+@using System.Text;
+@using System.Threading.Tasks;
 
 <style>
     @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -48,7 +55,7 @@ else
                     <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
                 }
 
-             
+
             </div>
 
         </div>
@@ -98,11 +105,11 @@ else
 @code
 {
 
-    public SubmissionSample Submission { get; set; }  
+    public SubmissionSample Submission { get; set; }
     private int Counter = 1;
     private async Task PageUp()
     {
-        if(State.Count == State.Submissions.Count)
+        if (State.Count == State.Submissions.Count)
         {
             Counter++;
             State.Count++;
@@ -111,9 +118,9 @@ else
         }
         else
         {
-             await jsr.InvokeVoidAsync("alert", "Don't forget to save your work!");
+            await jsr.InvokeVoidAsync("alert", "Don't forget to save your work!");
         }
-     
+
     }
 
     private void PageDown()
@@ -121,7 +128,7 @@ else
         Counter--;
         State.Count--;
         if (Counter < 1)
-            Counter = 1; 
+            Counter = 1;
 
     }
 
@@ -139,20 +146,27 @@ else
             username = userdetails[0];
             role = userdetails[1].ToLower();
         }
-    }   
+    }
 
     private async Task SubmitResponse()
     {
-         if(State.Count == State.Submissions.Count)
+        if (State.Count == State.Submissions.Count)
         {
-            NavigationManager.NavigateTo("/submissionspace");
+            foreach (var item in State.Submissions)
+            {
+                item.UserEmail = username;
+            }
+            var SubmissionJson = JsonConvert.SerializeObject(State.Submissions);
+            var httpContent = new StringContent(SubmissionJson, Encoding.UTF8, "application/json");
+            await client.PostAsync("api/SubmissionSample",httpContent);
+            NavigationManager.NavigateTo("/done");
         }
         else
         {
             await jsr.InvokeVoidAsync("alert", "Don't forget to save your work!");
         }
-        
-      
+
+
     }
 
 }

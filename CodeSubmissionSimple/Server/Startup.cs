@@ -1,7 +1,4 @@
 using CodeSubmissionSimple.Server.Configurations;
-using CodeSubmissionSimple.Server.Data;
-using CodeSubmissionSimple.Server.IRepositories;
-using CodeSubmissionSimple.Server.Repositories;
 using CodeSubmissionSimple.Server.TestEnvironment;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -30,22 +27,19 @@ namespace CodeSubmissionSimple.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("sqlConnection"));
             });
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseSqlite(Configuration.GetConnectionString("testConnection"));
-            });
+           
 
             services.AddControllersWithViews();
             services.AddRazorPages();
 
             services.AddAutoMapper(typeof(MapperInitializer));
 
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            
             services.AddTransient<IWorkOfUnit, WorkOfUnit>();
             services.AddControllers().AddNewtonsoftJson(op => op.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 

@@ -14,6 +14,8 @@ namespace CodeSubmissionSimple.Server.TestEnvironment
 
         IEncompassingRepository<Submission> Submissions { get; }
 
+        IEncompassingRepository<SubmissionSample> SubmissionSamples { get; }
+
         Task Save();
 
     }
