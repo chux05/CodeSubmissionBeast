@@ -117,8 +117,6 @@
 
 <EditForm OnValidSubmit="Save" Model="Submission" class="center-inner">
 
-   <h3 style="color: blue;">@State.Submissions.Count</h3>
-
   <div class="question-container">
     
     <h3 class="mb-3" id="question-title">Back-end Challenge - 1</h3>
@@ -180,7 +178,6 @@
 
   private void Save()
   {
-     State.Count++;
      State.Submissions.Add(Submission);
   }
 

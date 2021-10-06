@@ -100,17 +100,26 @@ else
 
     public SubmissionSample Submission { get; set; }  
     private int Counter = 1;
-    private void PageUp()
+    private async Task PageUp()
     {
-        Counter++;
-        if (Counter > 6)
-            Counter = 6;
+        if(State.Count == State.Submissions.Count)
+        {
+            Counter++;
+            State.Count++;
+            if (Counter > 6)
+                Counter = 6;
+        }
+        else
+        {
+             await jsr.InvokeVoidAsync("alert", "Don't forget to save your work!");
+        }
      
     }
 
     private void PageDown()
     {
         Counter--;
+        State.Count--;
         if (Counter < 1)
             Counter = 1; 
 
@@ -132,9 +141,18 @@ else
         }
     }   
 
-    private void SubmitResponse()
+    private async Task SubmitResponse()
     {
-       NavigationManager.NavigateTo("/submissionspace");
+         if(State.Count == State.Submissions.Count)
+        {
+            NavigationManager.NavigateTo("/submissionspace");
+        }
+        else
+        {
+            await jsr.InvokeVoidAsync("alert", "Don't forget to save your work!");
+        }
+        
+      
     }
 
 }

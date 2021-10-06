@@ -139,8 +139,7 @@
 
 <EditForm OnValidSubmit="Save" Model="Submission" class="center-inner">
 
-  <h3 style="color: blue;">@State.Submissions.Count</h3>
-
+ 
   <div class="question-container">
 
     <h3 id="question-title" class="mb-3">Database Challenge - 1</h3>
@@ -211,8 +210,7 @@
     //check if response box is filled
     //add prompt for next button - create own drop down confirm box
     //keep state once page is refreshed - look into localstorage - cache
-
-    State.Count++;
+   
     State.Submissions.Add(Submission);
   }
 
