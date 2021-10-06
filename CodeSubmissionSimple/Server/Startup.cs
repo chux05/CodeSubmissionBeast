@@ -2,6 +2,7 @@ using CodeSubmissionSimple.Server.Configurations;
 using CodeSubmissionSimple.Server.Data;
 using CodeSubmissionSimple.Server.IRepositories;
 using CodeSubmissionSimple.Server.Repositories;
+using CodeSubmissionSimple.Server.TestEnvironment;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,12 +35,18 @@ namespace CodeSubmissionSimple.Server
                 options.UseSqlServer(Configuration.GetConnectionString("sqlConnection"));
             });
 
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlite(Configuration.GetConnectionString("testConnection"));
+            });
+
             services.AddControllersWithViews();
             services.AddRazorPages();
 
             services.AddAutoMapper(typeof(MapperInitializer));
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IWorkOfUnit, WorkOfUnit>();
             services.AddControllers().AddNewtonsoftJson(op => op.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddTransient<IUserDb, UserDb>();
