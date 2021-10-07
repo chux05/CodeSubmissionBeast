@@ -138,7 +138,6 @@
 </style>
 
 <EditForm OnValidSubmit="Save" Model="Submission" class="center-inner">
-
  
   <div class="question-container">
 
@@ -151,7 +150,7 @@
 
     </p>
 
-    <button @onclick="ShowModal" class="btn btn-outline-primary btn-sm">Click here to view ERD Diagram</button>
+    <button type="button" @onclick="ShowModal" class="btn btn-outline-primary btn-sm">Click here to view ERD Diagram</button>
 
   </div>
 
@@ -164,7 +163,7 @@
             <DataAnnotationsValidator />
             <ValidationSummary />
           </div>
-      <button class="btn btn-primary btn-sm">Save</button>
+      <button class="btn btn-primary btn-sm" type="submit">Save</button>
     </div>
 
   </div>
@@ -210,8 +209,9 @@
     //check if response box is filled
     //add prompt for next button - create own drop down confirm box
     //keep state once page is refreshed - look into localstorage - cache
-   
-    State.Submissions.Add(Submission);
+       
+      State.Submissions.Add(Submission);
+
   }
 
 }

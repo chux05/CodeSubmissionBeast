@@ -1,28 +1,112 @@
-<style>
+@using System.Threading
+@inject HttpClient HttpClient
+@inject IJSRuntime jsr
 
-   .center-inner {
+<style>
+  .center-inner {
     width: 80%;
     height: 80%;
     margin: auto;
     max-width: 1000px;
     max-height: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    background-color: blue;
+    background-color: #edf2fb;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    padding: 20px;
+    overflow-y: scroll;
   }
 
- 
+  .btn-admin-wrapper
+  {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 
 </style>
 
 <EditForm Model="Submission" class="center-inner">
 
- <h1>View</h1>
+  
+
+  @if (TotalSubmissions != null)
+  {
+    <div class="btn-admin-wrapper mb-3">
+
+      <button type="button" class="btn btn-outline-danger btn-sm" @onclick="Reset">Reset</button>
+
+    </div>
+
+    <table class="table table-bordered table-dark">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Email</th>
+          <th scope="col">Response</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        @foreach (var submission in TotalSubmissions)
+        {
+          <tr>
+            <th scope="row">@submission.QuestionNumber</th>
+            <td style="cursor: pointer;" id="email" @onclick="Filter">@submission.UserEmail</td>
+            <td>@submission.Answer</td>
+          </tr>
+        }
+
+
+      </tbody>
+    </table>
+  }
+  else
+  {
+    <h1>Loading data...</h1>
+  }
 
 </EditForm>
 
 @code
 {
-    public SubmissionSample Submission { get; set; } = new SubmissionSample();
+  public SubmissionSample Submission { get; set; } = new SubmissionSample();
+  private string email = string.Empty;
+  List<SubmissionSample> TotalSubmissions;
+  List<SubmissionSample> Cache;
+  bool firstStart = false;  
+  protected override async Task OnInitializedAsync()
+  {
+    firstStart = true;
+    TotalSubmissions = await HttpClient.GetFromJsonAsync<List<SubmissionSample>>("api/submissionsample");
+    Cache = TotalSubmissions;  
+      
+  }
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {      
+    
+      if(TotalSubmissions != null && firstStart)
+      {
+        await jsr.InvokeVoidAsync("initailizeEmails");
+        firstStart = false;
+      }
+
+  }
+
+  private async Task Reset()
+  {
+    
+    TotalSubmissions = Cache;
+    //TODO:FIX RESET FILTERING ISSUE
+    await jsr.InvokeVoidAsync("initailizeEmails");
+
+  }
+
+  private async Task Filter()
+  {
+    email = await jsr.InvokeAsync<string>("getEmail");
+    TotalSubmissions = await HttpClient.GetFromJsonAsync<List<SubmissionSample>>($"api/submissionsample/email={email}");           
+  }
+
 }

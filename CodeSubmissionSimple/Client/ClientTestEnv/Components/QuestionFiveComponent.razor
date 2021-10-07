@@ -137,7 +137,6 @@
 
 <EditForm OnValidSubmit="Save" Model="Submission" class="center-inner">
 
-
   <div class="question-container">
 
     <h3 id="question-title">Front-end Challenge - 1</h3>
@@ -154,7 +153,7 @@
 
     </p>
 
-    <button @onclick="ShowModal" class="btn btn-outline-primary btn-sm">Click here to view Code Snippet</button>
+    <button type="button" @onclick="ShowModal" class="btn btn-outline-primary btn-sm">Click here to view Code Snippet</button>
 
   </div>
 
@@ -167,7 +166,7 @@
             <DataAnnotationsValidator />
           <ValidationSummary />
           </div>
-      <button class="btn btn-primary btn-sm">Save</button>
+      <button type="submit" class="btn btn-primary btn-sm">Save</button>
     </div>
 
   </div>

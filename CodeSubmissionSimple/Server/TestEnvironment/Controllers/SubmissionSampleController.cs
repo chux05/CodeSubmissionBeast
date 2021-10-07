@@ -57,7 +57,7 @@ namespace CodeSubmissionSampleSimple.Server.TestEnvironment
         }
 
         // GET api/<AnswersController>/nid=1
-        [HttpGet("emai={userEmail}")]
+        [HttpGet("email={userEmail}")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAnswersOfCandidate(string userEmail)

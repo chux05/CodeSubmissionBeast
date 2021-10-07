@@ -1,0 +1,205 @@
+@page "/notice"
+@inject NavigationManager NavigationManager
+@inject IJSRuntime jsr
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+    * {
+        font-family: 'Montserrat', sans-serif;
+        line-height: 22px;
+    }
+
+    .wrapper {
+        width: 100%;
+        height: 100vh;
+    }
+
+    /*NAV*/
+    .nav-container {
+        width: 100%;
+        height: 8vh;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0px 2rem;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+    }
+
+    .icon span {
+        font-weight: bold;
+    }
+
+
+    /*MAIN SECTION*/
+    .center-container {
+        width: 100%;
+        height: 86vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .center-inner {
+        width: 80%;
+        height: 80%;
+        margin: auto;
+        max-width: 1000px;
+        max-height: 600px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #edf2fb;
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        padding: 20px;
+    }
+
+    .content-wrapper
+  {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 90%;
+      max-width: 400px;
+      height: 90%;
+      max-height: 350px;
+      font-size: 13px;
+      padding: 20px; 
+      background-color: #fff;
+      border-radius: 5px;
+      border: 1px solid #a8dadc;   
+
+  }
+    
+
+    /*FOOTER*/
+    .footer-container {
+        width: 100%;
+        height: 6vh;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .footer-container span {
+        font-size: 13px;
+        font-weight: bold;
+        margin-right: 2rem;
+    }
+
+    @@media screen and (max-width: 500px) {
+        .content-wrapper
+        {
+            overflow-y: scroll;
+        }
+    }
+
+    @@media screen and (max-height: 550px) {
+        .content-wrapper
+        {
+            overflow-y: scroll;
+        }
+    }
+
+    @@media screen and (max-width: 240px) {
+        .wrapper {
+            display: none;
+        }
+    }
+
+    @@media screen and (max-height: 300px) {
+        .wrapper {
+            display: none;
+        }
+    }
+</style>
+
+@if (string.IsNullOrEmpty(username))
+{
+    <RegLogComponent/>
+}
+else
+{
+
+<div class="wrapper">
+
+
+    <div class="nav-container">
+
+        <div class="icon">
+
+            <img src="images/launch.png" alt="astro"> &nbsp;
+            <span>The Crossroads</span>
+
+        </div>
+
+    </div>
+
+    <UserAuthActionComponent />
+
+    <div class="center-container">
+
+
+        <div class="center-inner">
+
+
+            <div class="content-wrapper">
+
+                <div>
+
+                   <p>You are about to begin the test. Ensure you're in a quiet environment with no distractions.</p>
+                <p>There's a total of six questions and no time limit. For the best experience, we suggest you use a laptop or a desktop computer.</p>
+                <p>Read the questions carefully and save your answers in the space provided.</p>
+                <p>You may begin when you're ready. Goodluck!</p>
+
+                <button type="button" class="btn btn-outline-success btn-sm" @onclick="Start">Start</button>     
+
+                </div>
+
+            </div>    
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="footer-container">
+
+        <span>Nebula 2021 &reg;</span>
+
+    </div>
+
+</div>
+
+}
+
+@code
+{
+     /*AUTHORIZING USER*/
+    string username = string.Empty;
+    string role = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var userdata = await jsr.InvokeAsync<string>("localStorage.getItem", "user").ConfigureAwait(false);
+        if (!string.IsNullOrWhiteSpace(userdata))
+        {
+            string[] userdetails = userdata.Split(';', 3);
+            username = userdetails[0];
+            role = userdetails[1].ToLower();
+        }
+    }
+    private async Task Start()
+    {
+        bool confirm = await jsr.InvokeAsync<bool>("confirm", "Are you sure?");
+        if(confirm)
+            NavigationManager.NavigateTo("/testenv");
+
+    }
+
+}
