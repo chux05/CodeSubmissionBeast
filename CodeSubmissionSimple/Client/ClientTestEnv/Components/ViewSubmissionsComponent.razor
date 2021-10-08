@@ -50,13 +50,14 @@
 
         @foreach (var submission in TotalSubmissions)
         {
+          
           <tr>
             <th scope="row">@submission.QuestionNumber</th>
-            <td style="cursor: pointer;" id="email" @onclick="Filter">@submission.UserEmail</td>
+            <td style="cursor: pointer;" @onclick="() => Filter(submission)">@submission.UserEmail</td>
             <td>@submission.Answer</td>
           </tr>
-        }
 
+        }
 
       </tbody>
     </table>
@@ -70,8 +71,7 @@
 
 @code
 {
-  public SubmissionSample Submission { get; set; } = new SubmissionSample();
-  private string email = string.Empty;
+  public SubmissionSample Submission { get; set; } = new SubmissionSample();  
   List<SubmissionSample> TotalSubmissions;
   List<SubmissionSample> Cache;
   bool firstStart = false;  
@@ -94,19 +94,14 @@
 
   }
 
-  private async Task Reset()
-  {
-    
+  private void Reset()
+  {    
     TotalSubmissions = Cache;
-    //TODO:FIX RESET FILTERING ISSUE
-    await jsr.InvokeVoidAsync("initailizeEmails");
-
   }
 
-  private async Task Filter()
+  private async Task Filter(SubmissionSample submission)
   {
-    email = await jsr.InvokeAsync<string>("getEmail");
-    TotalSubmissions = await HttpClient.GetFromJsonAsync<List<SubmissionSample>>($"api/submissionsample/email={email}");           
+    TotalSubmissions = await HttpClient.GetFromJsonAsync<List<SubmissionSample>>($"api/submissionsample/email={submission.UserEmail}");           
   }
 
 }
