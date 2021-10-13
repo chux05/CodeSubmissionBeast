@@ -10,8 +10,9 @@ namespace CodeSubmissionSimple.Client.ClientTestEnv.Utils
     {
         public List<SubmissionSample> Submissions { get; set; } = new List<SubmissionSample>();   
 
-        public int Count { get; set; } = 1;     
+        public int Count { get; set; } = 1;    
 
         public bool isSaved { get; set; }
+
     }
 }

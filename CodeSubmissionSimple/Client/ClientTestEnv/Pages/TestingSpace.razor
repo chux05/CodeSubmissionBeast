@@ -138,7 +138,7 @@ else
         else
         {
             await jsr.InvokeVoidAsync("alert", "Don't forget to save your work!");
-        }
+        }       
 
     }
 
@@ -170,6 +170,7 @@ else
         }
     }
 
+
     private async Task SubmitResponse()
     {
         if (State.Count == State.Submissions.Count)
@@ -187,7 +188,6 @@ else
         {
             await jsr.InvokeVoidAsync("alert", "Don't forget to save your work!");
         }
-
 
     }
 
