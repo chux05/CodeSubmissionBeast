@@ -16,19 +16,94 @@
     overflow-y: scroll;
   }
 
-  .btn-admin-wrapper
-  {
+  .btn-admin-wrapper {
     width: 100%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
   }
 
+  .answer-modal {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 94vh;
+    z-index: 1;
+    transition: all 0.5s ease-in-out;
+    background-color: #2d2d2d;
+    color: #fff;
+    display: none;
+
+  }
+
+  .answer-modal-user {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.6rem;
+  }
+
+  .answer-modal-title {
+    height: 30%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .answer-modal-container {
+    height: 60%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+  }
+
+  .answer-modal-container-inner {
+    width: 90%;
+    height: 90%;
+    margin: auto;
+    color: #000;
+    max-width: 700px;
+    max-height: 500px;
+    padding: 0.6rem;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow-y: scroll;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  }
 </style>
 
-<EditForm Model="Submission" class="center-inner">
 
-  
+<div class="answer-modal" id="answer-modal">
+
+  @if (SingleSubmission != null)
+  {
+    <div class="answer-modal-user">
+      <p>@SingleSubmission.UserEmail</p>
+      <button class="btn btn-danger btn-sm" @onclick="() => ToggleAnswerModal(SingleSubmission)">Close</button>
+    </div>
+    <div class="answer-modal-title">
+      <h2>@SingleSubmission.QuestionTitle</h2>
+    </div>
+    <div class="answer-modal-container">
+
+      <div class="answer-modal-container-inner">
+        @SingleSubmission.Answer
+      </div>
+
+    </div>
+  }
+  else
+  {
+    <h3>No data...</h3>
+  }
+
+</div>
+
+<EditForm Model="Submission" class="center-inner">
 
   @if (TotalSubmissions != null)
   {
@@ -43,18 +118,21 @@
         <tr>
           <th scope="col">#</th>
           <th scope="col">Email</th>
-          <th scope="col">Response</th>
+          <th scope="col">Title</th>
+          <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
 
         @foreach (var submission in TotalSubmissions)
         {
-          
+
           <tr>
             <th scope="row">@submission.QuestionNumber</th>
             <td style="cursor: pointer;" @onclick="() => Filter(submission)">@submission.UserEmail</td>
-            <td>@submission.Answer</td>
+            <td>@submission.QuestionTitle</td>
+            <td><button class="btn btn-primary btn-sm" @onclick="() => ToggleAnswerModal(submission)">View
+                Submission</button></td>
           </tr>
 
         }
@@ -71,26 +149,45 @@
 
 @code
 {
-  public SubmissionSample Submission { get; set; } = new SubmissionSample();  
+  public SubmissionSample Submission { get; set; } = new SubmissionSample();
   List<SubmissionSample> TotalSubmissions;
+  SubmissionSample SingleSubmission;
+
   List<SubmissionSample> Cache;
-  bool firstStart = false;  
+  bool firstStart = false;
   protected override async Task OnInitializedAsync()
   {
     firstStart = true;
     TotalSubmissions = await HttpClient.GetFromJsonAsync<List<SubmissionSample>>("api/submissionsample");
-    Cache = TotalSubmissions;  
-      
+    Cache = TotalSubmissions;
+    SingleSubmission ??= TotalSubmissions[0];
+
+  }
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (firstRender)
+    {
+      await jsr.InvokeVoidAsync("initializeAnswerModalIds");
+    }
   }
 
   private void Reset()
-  {    
+  {
     TotalSubmissions = Cache;
   }
 
   private async Task Filter(SubmissionSample submission)
   {
-    TotalSubmissions = await HttpClient.GetFromJsonAsync<List<SubmissionSample>>($"api/submissionsample/email={submission.UserEmail}");           
+    TotalSubmissions = await
+    HttpClient.GetFromJsonAsync<List<SubmissionSample>>($"api/submissionsample/email={submission.UserEmail}");
+
+  }
+
+  private async Task ToggleAnswerModal(SubmissionSample submission)
+  {
+    SingleSubmission = submission;
+    await jsr.InvokeVoidAsync("toggle");
   }
 
 }

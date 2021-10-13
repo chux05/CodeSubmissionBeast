@@ -14,3 +14,4 @@ function getValues()
     return [number.innerText, description.innerText];
 }
 
+
