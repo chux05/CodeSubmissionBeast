@@ -198,6 +198,14 @@
 
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (State.Submissions.Count >= State.Count)
+        {
+            Submission = State.Submissions[State.Count - 1];
+        }
+    }
+
     private async Task ShowModal()
     {
         await jsr.InvokeVoidAsync("showModal");
@@ -215,6 +223,7 @@
             State.Submissions[State.Count - 1] = Submission;
         }
         Saved = true;
+        State.isSaved = true;
     }
 
 }

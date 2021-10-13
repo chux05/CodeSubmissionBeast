@@ -127,10 +127,11 @@ else
     private bool loaded = false;
     private async Task PageUp()
     {
-        if (State.Count == State.Submissions.Count)
+        if (State.Count <= State.Submissions.Count && State.isSaved)
         {
             Counter++;
             State.Count++;
+            State.isSaved = false;
             if (Counter > 6)
                 Counter = 6;
         }
@@ -147,10 +148,6 @@ else
         State.Count--;
         if (Counter < 1)
             Counter = 1;
-
-        //TODO: fix previous bug
-        // Use of a stack?
-        State.Submissions.RemoveAt(State.Submissions.Count - 1);
 
     }
 

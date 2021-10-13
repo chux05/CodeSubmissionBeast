@@ -56,7 +56,7 @@ namespace CodeSubmissionSampleSimple.Server.TestEnvironment
             }
         }
 
-        // GET api/<AnswersController>/nid=1
+        // GET api/SubmissionSamplesController>/email=test@gmail.com
         [HttpGet("email={userEmail}")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -73,7 +73,7 @@ namespace CodeSubmissionSampleSimple.Server.TestEnvironment
             }
         }
 
-        // Post api/<AnswersController>
+        // Post api/<SubmissionSamplesController>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -95,6 +95,35 @@ namespace CodeSubmissionSampleSimple.Server.TestEnvironment
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
+        }
+
+        // DELETE api/<SubmissionsController>/5
+        [HttpDelete("email={userEmail}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteSubmissions(string userEmail)
+        {
+           
+            try
+            {
+                var submissions = await _workOfUnit.SubmissionSamples.GetAll(q => q.UserEmail == userEmail);
+
+                if (submissions == null)
+                {
+                    return BadRequest("Submitted data is invalid");
+                }
+
+                 _workOfUnit.SubmissionSamples.DeleteRange(submissions);
+                await _workOfUnit.Save();
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+
         }
     }
 }

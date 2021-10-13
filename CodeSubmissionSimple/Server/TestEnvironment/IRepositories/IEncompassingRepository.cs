@@ -21,5 +21,7 @@ namespace CodeSubmissionSimple.Server.TestEnvironment
 
         Task InsertRange(IEnumerable<T> entities);
 
+        void DeleteRange(IEnumerable<T> entities);
+
     }
 }
