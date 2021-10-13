@@ -12,6 +12,6 @@ namespace CodeSubmissionSimple.Client.ClientTestEnv.Utils
 
         public int Count { get; set; } = 1;     
 
-        
+        public bool isSaved { get; set; }
     }
 }
