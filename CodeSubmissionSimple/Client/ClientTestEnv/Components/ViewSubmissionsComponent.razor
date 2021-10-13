@@ -83,17 +83,6 @@
       
   }
 
-  protected override async Task OnAfterRenderAsync(bool firstRender)
-  {      
-    
-      if(TotalSubmissions != null && firstStart)
-      {
-        await jsr.InvokeVoidAsync("initailizeEmails");
-        firstStart = false;
-      }
-
-  }
-
   private void Reset()
   {    
     TotalSubmissions = Cache;
