@@ -4,7 +4,6 @@
 @inject HttpClient client
 @inject State State
 
-
 @using System.Net.Http;
 @using Newtonsoft.Json;
 @using System.Text;
@@ -19,86 +18,103 @@
     }
 </style>
 
-@if (string.IsNullOrEmpty(username))
+@if (!loaded)
 {
-    <RegLogComponent />
+    //laoding screen
+    <p> Loading... </p>
 }
 else
 {
+    if (string.IsNullOrEmpty(username))
+    {
+        //once loaded, check if person is a is authorised to access page
+        <RegLogComponent />
+    }
+    else
+    {
+        //load srcreen 
+        if (InitialCount > 0 && role.ToLower().Equals("candidate"))
+        {
+            NavigationManager.NavigateTo("/alreadyDone");
+        }
+        else
+        {
 
-    <div class="wrapper">
+            <div class="wrapper">
 
 
-        <div class="nav-container">
+                <div class="nav-container">
 
-            <div class="icon">
+                    <div class="icon">
 
-                <img src="images/launch.png" alt="astro"> &nbsp;
-                <span>Xebec Test Environment</span>
+                        <img src="images/launch.png" alt="astro"> &nbsp;
+                        <span>Xebec Test Environment</span>
+
+                    </div>
+
+                    <div class="btn-container">
+
+                        @if (Counter > 1 && Counter < 6)
+                        {
+                            <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
+                            <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
+                        }
+                        else if (Counter == 6)
+                        {
+                            <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
+                            <button class="btn btn-outline-danger btn-sm" @onclick="SubmitResponse">Submit</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
+                        }
+
+
+                    </div>
+
+                </div>
+
+                <UserAuthActionComponent />
+
+                <div class="center-container">
+
+
+                    @if (Counter == 1)
+                    {
+                        <QuestionOneComponent />
+                    }
+                    else if (Counter == 2)
+                    {
+                        <QuestionTwoComponent />
+                    }
+                    else if (Counter == 3)
+                    {
+                        <QuestionThreeComponent />
+                    }
+                    else if (Counter == 4)
+                    {
+                        <QuestionFourComponent />
+                    }
+                    else if (Counter == 5)
+                    {
+                        <QuestionFiveComponent />
+                    }
+                    else if (Counter == 6)
+                    {
+                        <QuestionSixComponent />
+                    }
+
+                </div>
+
+                <div class="footer-container">
+
+                    <span>Nebula 2021 &reg;</span>
+
+                </div>
 
             </div>
-
-            <div class="btn-container">
-
-                @if (Counter > 1 && Counter < 6)
-                {
-                    <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
-                    <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
-                }
-                else if (Counter == 6)
-                {
-                    <button class="btn btn-outline-primary btn-sm mr-2" @onclick="PageDown">Prev</button>
-                    <button class="btn btn-outline-danger btn-sm" @onclick="SubmitResponse">Submit</button>
-                }
-                else
-                {
-                    <button class="btn btn-outline-success btn-sm" @onclick="PageUp">Next</button>
-                }
-
-
-            </div>
-
-        </div>
-
-        <UserAuthActionComponent />
-
-        <div class="center-container">
-
-
-            @if (Counter == 1)
-            {
-                <QuestionOneComponent />
-            }
-            else if (Counter == 2)
-            {
-                <QuestionTwoComponent />
-            }
-            else if (Counter == 3)
-            {
-                <QuestionThreeComponent />
-            }
-            else if (Counter == 4)
-            {
-                <QuestionFourComponent />
-            }
-            else if (Counter == 5)
-            {
-                <QuestionFiveComponent />
-            }
-            else if (Counter == 6)
-            {
-                <QuestionSixComponent />
-            }
-
-        </div>
-
-        <div class="footer-container">
-
-            <span>Nebula 2021 &reg;</span>
-
-        </div>
-
-    </div>
+        }
+    }
 }
 
 
@@ -107,6 +123,8 @@ else
 
     public SubmissionSample Submission { get; set; }
     private int Counter = 1;
+    private int InitialCount = 0;
+    private bool loaded = false;
     private async Task PageUp()
     {
         if (State.Count == State.Submissions.Count)
@@ -131,7 +149,8 @@ else
             Counter = 1;
 
         //TODO: fix previous bug
-        //State.Submissions.RemoveAt(State.Submissions.Count - 1);    
+        // Use of a stack?
+        State.Submissions.RemoveAt(State.Submissions.Count - 1);
 
     }
 
@@ -148,6 +167,9 @@ else
             string[] userdetails = userdata.Split(';', 3);
             username = userdetails[0];
             role = userdetails[1].ToLower();
+            State.Submissions = await client.GetFromJsonAsync<List<SubmissionSample>>($"api/submissionsample/email={username}");
+            InitialCount = State.Submissions.Count;
+            loaded = true;
         }
     }
 
@@ -161,7 +183,7 @@ else
             }
             var SubmissionJson = JsonConvert.SerializeObject(State.Submissions);
             var httpContent = new StringContent(SubmissionJson, Encoding.UTF8, "application/json");
-            await client.PostAsync("api/SubmissionSample",httpContent);
+            await client.PostAsync("api/SubmissionSample", httpContent);
             NavigationManager.NavigateTo("/done");
         }
         else

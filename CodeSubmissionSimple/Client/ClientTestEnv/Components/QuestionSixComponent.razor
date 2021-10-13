@@ -2,184 +2,187 @@
 @inject State State
 
 <style>
-  .center-inner {
-    width: 80%;
-    height: 80%;
-    margin: auto;
-    max-width: 1000px;
-    max-height: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-  }
+    .center-inner {
+        width: 80%;
+        height: 80%;
+        margin: auto;
+        max-width: 1000px;
+        max-height: 600px;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
 
-  .question-container {
-    width: 40%;
-    height: 90%;
-    margin: auto;
-    padding: 20px;
-    overflow: scroll;
-    background-color: #fff;
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-    border-radius: 5px;
-    font-size: 14px;
-  }
+    .question-container {
+        width: 40%;
+        height: 90%;
+        margin: auto;
+        padding: 20px;
+        overflow: scroll;
+        background-color: #fff;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        border-radius: 5px;
+        font-size: 14px;
+    }
 
 
 
-  .question-container::-webkit-scrollbar
-  {
-      width: 10px;
-      height: 10px;
-  }
+        .question-container::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
 
-  .question-container::-webkit-scrollbar-track {
+        .question-container::-webkit-scrollbar-track {
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .question-container::-webkit-scrollbar-thumb {
+            background-color: #95A5A6;
+            border-radius: 20px;
+            border: 3px solid #fff;
+        }
+
+    .ide-container .textarea::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    .ide-container .textarea::-webkit-scrollbar-track {
         background-color: #fff;
         border-radius: 5px;
     }
 
-  .question-container::-webkit-scrollbar-thumb {
+    .ide-container .textarea::-webkit-scrollbar-thumb {
         background-color: #95A5A6;
         border-radius: 20px;
         border: 3px solid #fff;
-  }
-
-  .ide-container .textarea::-webkit-scrollbar
-  {
-      width: 10px;
-      height: 10px;
-  }
-
-  .ide-container .textarea::-webkit-scrollbar-track {
-        background-color: #fff;
-        border-radius: 5px;
-    }
-
-  .ide-container .textarea::-webkit-scrollbar-thumb {
-        background-color: #95A5A6;
-        border-radius: 20px;
-        border: 3px solid #fff;
-  }
-
-  .ide-container {
-    width: 55%;
-    height: 90%;
-    margin: auto;
-    background-color: #fff;
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-    border-radius: 5px;
-  }
-
-  .ide-container .textarea
-  {
-    width: 100%;
-    height: 100%;
-    resize: none;
-    border: none;
-    outline: none;
-    padding: 15px;
-    font-size: 14px;
-    border-radius: 5px;
-  }
-
-   .save-btn-container
-  {
-    width: 100%;
-    height: fit-content;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-
-/*MEDIA QUERIES*/
-@@media screen and (max-width: 780px)
-{
-    .center-inner
-    {
-        flex-direction: column;
-    }
-
-  .question-container {
-      width: 90%;
-      height: 55%;
     }
 
     .ide-container {
-      width: 90%;
-      height: 40%;
+        width: 55%;
+        height: 90%;
+        margin: auto;
+        background-color: #fff;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        border-radius: 5px;
     }
 
-}
+        .ide-container .textarea {
+            width: 100%;
+            height: 100%;
+            resize: none;
+            border: none;
+            outline: none;
+            padding: 15px;
+            font-size: 14px;
+            border-radius: 5px;
+        }
 
+    .save-btn-container {
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
 
+    /*MEDIA QUERIES*/
+    @@media screen and (max-width: 780px) {
+        .center-inner {
+            flex-direction: column;
+        }
 
-</style> 
+        .question-container {
+            width: 90%;
+            height: 55%;
+        }
+
+        .ide-container {
+            width: 90%;
+            height: 40%;
+        }
+    }
+</style>
 
 <EditForm OnValidSubmit="Save" Model="Submission" class="center-inner">
 
-  <div class="question-container">
-    
-    <h3 id="question-title">Front-end Challenge - 2</h3>
+    <div class="question-container">
 
-    <p id="question-description">
+        <h3 id="question-title">Front-end Challenge - 2</h3>
 
-      Consider the function below:   
+        <p id="question-description">
 
-    </p>
+            Consider the function below:
 
-    <img src="images/front-2.png" alt="code">
-   
-    <ol style="margin: 12px 0 0 10px;">
-      <li>Why will the function be parsed correctly?</li><br>
-      <li>How could you introduce a stricter syntax to variable/function declaration and avoid this behaviour?</li>
-    </ol>
+        </p>
 
-  </div>
+        <img src="images/front-2.png" alt="code">
 
-  <div class="ide-container">
+        <ol style="margin: 12px 0 0 10px;">
+            <li>Why will the function be parsed correctly?</li>
+            <br>
+            <li>How could you introduce a stricter syntax to variable/function declaration and avoid this behaviour?</li>
+        </ol>
 
-    <InputTextArea class="textarea" placeholder="What's your response?" @bind-Value="@Submission.Answer" spellcheck="false"/>
-
-    <div class="save-btn-container">
-          <div class="mr-3">
-            <DataAnnotationsValidator />
-          <ValidationSummary />
-          </div>
-      <button type="submit" class="btn btn-primary btn-sm">Save</button>
     </div>
 
-  </div>
+    <div class="ide-container">
+
+        <InputTextArea class="textarea" placeholder="What's your response?" @bind-Value="@Submission.Answer" spellcheck="false" />
+
+        <div class="save-btn-container">
+            <div class="mr-3">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                @if (Saved)
+                {
+                    <span class="savedMessage"><em>Saved!    </em></span>
+                }
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        </div>
+
+    </div>
 
 </EditForm>
 
 
 @code
 {
- 
-   public SubmissionSample Submission { get; set; } = new SubmissionSample();
 
-     protected override async Task OnAfterRenderAsync(bool firstRender)
-  {
-      if(firstRender)
-      {
-          await jsr.InvokeVoidAsync("getIds");
-      }
+    public SubmissionSample Submission { get; set; } = new SubmissionSample();
+    private bool Saved = false;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await jsr.InvokeVoidAsync("getIds");
+        }
 
-      string[] elementInfo = await jsr.InvokeAsync<string[]>("getValues");
-      Submission.QuestionNumber = State.Count;
-      Submission.QuestionTitle = elementInfo[0];
-      Submission.QuestionDescription = elementInfo[1];
+        string[] elementInfo = await jsr.InvokeAsync<string[]>("getValues");
+        Submission.QuestionNumber = State.Count;
+        Submission.QuestionTitle = elementInfo[0];
+        Submission.QuestionDescription = elementInfo[1];
 
-  }
+    }
 
-  private async Task ShowModal()
-  {
-      await jsr.InvokeVoidAsync("showModal");
-  }
+    private async Task ShowModal()
+    {
+        await jsr.InvokeVoidAsync("showModal");
+    }
 
-  private void Save()
-  {
-     State.Submissions.Add(Submission);
-  }
+    private void Save()
+    {
+        if (State.Submissions.Count < State.Count)
+        {
+            State.Submissions.Add(Submission);
+        }
+        else
+        {
+            State.Submissions[State.Count - 1] = Submission;
+        }
+        Saved = true;
+    }
 
 }

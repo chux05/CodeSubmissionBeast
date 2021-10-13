@@ -1,7 +1,8 @@
 @page "/notice"
 @inject NavigationManager NavigationManager
 @inject IJSRuntime jsr
-
+@inject HttpClient client
+@inject State State
 <style>
     @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
@@ -55,23 +56,21 @@
         padding: 20px;
     }
 
-    .content-wrapper
-  {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 90%;
-      max-width: 400px;
-      height: 90%;
-      max-height: 350px;
-      font-size: 13px;
-      padding: 20px; 
-      background-color: #fff;
-      border-radius: 5px;
-      border: 1px solid #a8dadc;   
+    .content-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 90%;
+        max-width: 400px;
+        height: 90%;
+        max-height: 350px;
+        font-size: 13px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        border: 1px solid #a8dadc;
+    }
 
-  }
-    
 
     /*FOOTER*/
     .footer-container {
@@ -82,22 +81,20 @@
         justify-content: flex-end;
     }
 
-    .footer-container span {
-        font-size: 13px;
-        font-weight: bold;
-        margin-right: 2rem;
-    }
+        .footer-container span {
+            font-size: 13px;
+            font-weight: bold;
+            margin-right: 2rem;
+        }
 
     @@media screen and (max-width: 500px) {
-        .content-wrapper
-        {
+        .content-wrapper {
             overflow-y: scroll;
         }
     }
 
     @@media screen and (max-height: 550px) {
-        .content-wrapper
-        {
+        .content-wrapper {
             overflow-y: scroll;
         }
     }
@@ -117,69 +114,76 @@
 
 @if (string.IsNullOrEmpty(username))
 {
-    <RegLogComponent/>
+    <RegLogComponent />
 }
 else
 {
+    if (State.Submissions.Count > 0 && !role.ToLower().Equals("candidate"))
+    {
+        NavigationManager.NavigateTo("/alreadyDone");
+    }
+    else
+    {
 
-<div class="wrapper">
-
-
-    <div class="nav-container">
-
-        <div class="icon">
-
-            <img src="images/launch.png" alt="astro"> &nbsp;
-            <span>The Crossroads</span>
-
-        </div>
-
-    </div>
-
-    <UserAuthActionComponent />
-
-    <div class="center-container">
+        <div class="wrapper">
 
 
-        <div class="center-inner">
+            <div class="nav-container">
 
+                <div class="icon">
 
-            <div class="content-wrapper">
-
-                <div>
-
-                   <p>You are about to begin the test. Ensure you're in a quiet environment with no distractions.</p>
-                <p>There's a total of six questions and no time limit. For the best experience, we suggest you use a laptop or a desktop computer.</p>
-                <p>Read the questions carefully and save your answers in the space provided.</p>
-                <p>You may begin when you're ready. Goodluck!</p>
-
-                <button type="button" class="btn btn-outline-success btn-sm" @onclick="Start">Start</button>     
+                    <img src="images/launch.png" alt="astro"> &nbsp;
+                    <span>The Crossroads</span>
 
                 </div>
 
-            </div>    
+            </div>
 
+            <UserAuthActionComponent />
+
+            <div class="center-container">
+
+
+                <div class="center-inner">
+
+
+                    <div class="content-wrapper">
+
+                        <div>
+
+                            <p>You are about to begin the test. Ensure you're in a quiet environment with no distractions.</p>
+                            <p>There's a total of six questions and no time limit. For the best experience, we suggest you use a laptop or a desktop computer.</p>
+                            <p>Read the questions carefully and save your answers in the space provided.</p>
+                            <p>You may begin when you're ready. Goodluck!</p>
+
+                            <button type="button" class="btn btn-outline-success btn-sm" @onclick="Start">Start</button>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="footer-container">
+
+                <span>Nebula 2021 &reg;</span>
+
+            </div>
 
         </div>
 
-
-    </div>
-
-
-
-    <div class="footer-container">
-
-        <span>Nebula 2021 &reg;</span>
-
-    </div>
-
-</div>
-
+    }
 }
 
 @code
 {
-     /*AUTHORIZING USER*/
+    /*AUTHORIZING USER*/
     string username = string.Empty;
     string role = string.Empty;
 
@@ -192,12 +196,13 @@ else
             string[] userdetails = userdata.Split(';', 3);
             username = userdetails[0];
             role = userdetails[1].ToLower();
+            State.Submissions = await client.GetFromJsonAsync<List<SubmissionSample>>($"api/submissionsample/email={username}");
         }
     }
     private async Task Start()
     {
         bool confirm = await jsr.InvokeAsync<bool>("confirm", "Are you sure?");
-        if(confirm)
+        if (confirm)
             NavigationManager.NavigateTo("/testenv");
 
     }
