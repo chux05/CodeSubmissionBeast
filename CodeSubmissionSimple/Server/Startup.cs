@@ -1,5 +1,7 @@
 using CodeSubmissionSimple.Server.Configurations;
 using CodeSubmissionSimple.Server.TestEnvironment;
+using CodeSubmissionSimple.Server.TestEnvironment.IRepositories;
+using CodeSubmissionSimple.Server.TestEnvironment.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +43,7 @@ namespace CodeSubmissionSimple.Server
 
             
             services.AddTransient<IWorkOfUnit, WorkOfUnit>();
+            services.AddScoped<ISampleTest, SSampleTest>();
             services.AddControllers().AddNewtonsoftJson(op => op.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddTransient<IUserDb, UserDb>();

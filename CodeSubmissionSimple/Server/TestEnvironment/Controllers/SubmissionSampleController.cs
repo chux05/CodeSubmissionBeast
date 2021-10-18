@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CodeSubmissionSimple.Server.TestEnvironment;
+using CodeSubmissionSimple.Server.TestEnvironment.IRepositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -14,10 +15,12 @@ namespace CodeSubmissionSampleSimple.Server.TestEnvironment
     public class SubmissionSampleController : ControllerBase
     {
         private readonly IWorkOfUnit _workOfUnit;
+        private readonly ISampleTest test;
 
-        public SubmissionSampleController(IWorkOfUnit workofUnit)
+        public SubmissionSampleController(IWorkOfUnit workofUnit, ISampleTest test)
         {
             _workOfUnit = workofUnit;
+            this.test = test;
         }
 
         // GET: api/<SubmissionSamplesController>
@@ -36,6 +39,30 @@ namespace CodeSubmissionSampleSimple.Server.TestEnvironment
             catch (Exception e)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        [HttpGet("email")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<HashSet<string>> GetSubmissionsPerEmail()
+        {
+            try
+            {
+                var SubmissionSamples = await _workOfUnit.SubmissionSamples.GetAll();
+
+                HashSet<string> df = new HashSet<string>();
+                foreach (var sub in SubmissionSamples)
+                {
+                    df.Add(sub.UserEmail);
+                }
+                
+                return df;
+
+            }
+            catch (Exception e)
+            {
+                return null;
             }
         }
 

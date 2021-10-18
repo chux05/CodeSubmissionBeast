@@ -68,7 +68,7 @@ namespace CodeSubmissionSimple.Server.TestEnvironment
             await _db.AddRangeAsync(entities);
         }
 
-        public async void DeleteRange(IEnumerable<T> entities)
+        public void DeleteRange(IEnumerable<T> entities)
         {
              _db.RemoveRange(entities);
         }
