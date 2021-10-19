@@ -182,6 +182,9 @@ else
             var SubmissionJson = JsonConvert.SerializeObject(State.Submissions);
             var httpContent = new StringContent(SubmissionJson, Encoding.UTF8, "application/json");
             await client.PostAsync("api/SubmissionSample", httpContent);
+
+            
+
             NavigationManager.NavigateTo("/done");
         }
         else

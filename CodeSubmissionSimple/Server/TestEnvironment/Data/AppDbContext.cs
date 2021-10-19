@@ -15,8 +15,6 @@ namespace CodeSubmissionSimple.Server.TestEnvironment
 
         }
 
-
-
         public DbSet<AppUser> AppUser { get; set; }
         public DbSet<Answer> Answers { get; set; }
 

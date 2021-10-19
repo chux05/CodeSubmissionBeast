@@ -23,5 +23,6 @@ namespace CodeSubmissionSimple.Server.TestEnvironment
 
         void DeleteRange(IEnumerable<T> entities);
 
+      
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CodeSubmissionSampleSimple.Server.TestEnvironment
@@ -16,11 +17,13 @@ namespace CodeSubmissionSampleSimple.Server.TestEnvironment
     {
         private readonly IWorkOfUnit _workOfUnit;
         private readonly ISampleTest test;
+        private readonly AppDbContext context;
 
-        public SubmissionSampleController(IWorkOfUnit workofUnit, ISampleTest test)
+        public SubmissionSampleController(IWorkOfUnit workofUnit, ISampleTest test, AppDbContext context)
         {
             _workOfUnit = workofUnit;
             this.test = test;
+            this.context = context;
         }
 
         // GET: api/<SubmissionSamplesController>
@@ -152,5 +155,30 @@ namespace CodeSubmissionSampleSimple.Server.TestEnvironment
             }
 
         }
+
+
+        //get unique submissions by email
+        [HttpGet("user")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetDistinctUsers()
+        {
+             try
+            {               
+                
+                IQueryable<SubmissionSample> query = context.SubmissionSamples;
+
+                var SubmissionSamples = (from p in query                             
+                             select p.UserEmail).Distinct().ToList();
+
+                return Ok(SubmissionSamples);
+          
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
     }
 }

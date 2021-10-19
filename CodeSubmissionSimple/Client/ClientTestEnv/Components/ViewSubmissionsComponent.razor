@@ -9,12 +9,30 @@
     margin: auto;
     max-width: 1000px;
     max-height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     background-color: #edf2fb;
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
     padding: 20px;
     overflow-y: scroll;
   }
+
+    .center-inner::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .center-inner::-webkit-scrollbar-track {
+            background-color: #EAF2F8;
+        }
+
+        .center-inner::-webkit-scrollbar-thumb {
+            background-color: #95A5A6;
+            border-radius: 20px;
+            border: 3px solid #EAF2F8;
+        }
 
   .btn-admin-wrapper {
     width: 100%;
@@ -58,8 +76,8 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center; 
-       
+    align-items: center;
+
   }
 
   .answer-modal-container-inner {
@@ -77,7 +95,6 @@
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
   }
-
 </style>
 
 
@@ -109,45 +126,92 @@
 
 <EditForm Model="Submission" class="center-inner">
 
-  @if (TotalSubmissions != null)
+  @if (filterIsClicked)
   {
-    <div class="btn-admin-wrapper mb-3">
+    @if (TotalSubmissions != null)
+    {
+      <div class="btn-admin-wrapper mb-3">
 
-      <button type="button" class="btn btn-outline-danger btn-sm" @onclick="Reset">Reset</button>
-
-    </div>
-
-    <table class="table table-bordered table-dark">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Email</th>
-          <th scope="col">Title</th>
-          <th scope="col">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        @foreach (var submission in TotalSubmissions)
+        @if(SingleSubmission != null)
         {
+          <button type="button" class="btn btn-outline-danger btn-sm mr-2"  @onclick="() => DeleteSubmission(SingleSubmission.UserEmail)">Delete Submission</button>
+        }        
+        <button type="button" class="btn btn-outline-success btn-sm" @onclick="Reset">Reset</button>
 
+      </div>
+
+      <table class="table table-bordered table-dark">
+        <thead>
           <tr>
-            <th scope="row">@submission.QuestionNumber</th>
-            <td style="cursor: pointer;" @onclick="() => Filter(submission)">@submission.UserEmail</td>
-            <td>@submission.QuestionTitle</td>
-            <td><button class="btn btn-primary btn-sm" @onclick="() => ToggleAnswerModal(submission)">View
-                Submission</button></td>
+            <th scope="col">#</th>
+            <th scope="col">Email</th>
+            <th scope="col">Title</th>
+            <th scope="col">Action</th>
           </tr>
+        </thead>
+        <tbody>
 
-        }
+          @foreach (var submission in TotalSubmissions)
+          {
 
-      </tbody>
-    </table>
+            <tr>
+              <th scope="row">@submission.QuestionNumber</th>
+              <td>@submission.UserEmail</td>
+              <td>@submission.QuestionTitle</td>
+              <td><button class="btn btn-primary btn-sm" @onclick="() => ToggleAnswerModal(submission)">View
+                  Submission</button></td>
+            </tr>
+
+          }
+
+        </tbody>
+      </table>
+    }
+    else
+    {
+      <h1>Loading data...</h1>
+    }
+
   }
   else
   {
-    <h1>Loading data...</h1>
-  }
+
+    @if (Emails != null)
+    {
+     
+      <table class="table table-bordered table-dark">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Email</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          @foreach (var email in Emails)
+          {
+
+            <tr>
+              <th scope="row">1</th> 
+              <td>@email</td>           
+              <td><button class="btn btn-primary btn-sm" @onclick="() => Filter(email)">View
+                  Submissions</button></td>
+            </tr>
+
+          }
+
+        </tbody>
+      </table>
+    }
+    else
+    {
+      <h1>Loading data...</h1>
+    }
+
+
+  } 
+
 
 </EditForm>
 
@@ -157,14 +221,19 @@
   List<SubmissionSample> TotalSubmissions;
   SubmissionSample SingleSubmission;
 
-  List<SubmissionSample> Cache;
+  List<string> Cache;
   bool firstStart = false;
+
+  /*new updates*/
+  bool filterIsClicked = false;
+  List<string> Emails;
+
   protected override async Task OnInitializedAsync()
   {
+
     firstStart = true;
-    TotalSubmissions = await HttpClient.GetFromJsonAsync<List<SubmissionSample>>("api/submissionsample");
-    Cache = TotalSubmissions;
-    SingleSubmission ??= TotalSubmissions[0];
+    Emails = await HttpClient.GetFromJsonAsync<List<string>>("api/SubmissionSample/user");
+    Cache = Emails;  
 
   }
 
@@ -178,13 +247,16 @@
 
   private void Reset()
   {
-    TotalSubmissions = Cache;
+    filterIsClicked = false;
+    Emails = Cache;
   }
 
-  private async Task Filter(SubmissionSample submission)
+  private async Task Filter(string email)
   {
+    filterIsClicked = true;
     TotalSubmissions = await
-    HttpClient.GetFromJsonAsync<List<SubmissionSample>>($"api/submissionsample/email={submission.UserEmail}");
+    HttpClient.GetFromJsonAsync<List<SubmissionSample>>($"api/submissionsample/email={email}");
+    SingleSubmission = TotalSubmissions[0];
 
   }
 
@@ -192,6 +264,21 @@
   {
     SingleSubmission = submission;
     await jsr.InvokeVoidAsync("toggle");
+  }
+
+   private async Task DeleteSubmission(string email)
+  {
+      bool confirmed = await jsr.InvokeAsync<bool>("confirm", "Are you sure? All submissions for this candidate will be deleted");
+      
+        if(confirmed)
+        {
+          await HttpClient.DeleteAsync($"api/submissionsample/email={email}");
+          Emails = await HttpClient.GetFromJsonAsync<List<string>>("api/SubmissionSample/user");
+          Cache = Emails;
+          filterIsClicked = false;
+
+        }
+
   }
 
 }
