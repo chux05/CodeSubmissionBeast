@@ -183,7 +183,7 @@ else
             var httpContent = new StringContent(SubmissionJson, Encoding.UTF8, "application/json");
             await client.PostAsync("api/SubmissionSample", httpContent);
 
-            
+            await client.PostAsJsonAsync("https://prod-168.westeurope.logic.azure.com:443/workflows/9acd2517f22a4b9aad3cf300df015596/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=U_cZvxtuKiZSIPoAWoXd2AM_uEn291I3gNJVjlrH-DI", State.Submissions[0]);
 
             NavigationManager.NavigateTo("/done");
         }
