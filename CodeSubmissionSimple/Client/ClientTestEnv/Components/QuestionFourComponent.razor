@@ -208,6 +208,10 @@
         {
             Submission = State.Submissions[State.Count - 1];
         }
+        else
+        {
+            Submission.Answer = State.Q4template;
+        }
     }
 
     private async Task ShowModal()
